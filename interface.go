@@ -11,16 +11,16 @@ import (
 )
 
 var (
-	ErrJWTInvalid = middleware.ErrJWTInvalid
-	ErrJWTMissing = middleware.ErrJWTMissing
+	ErrJWTInvalid = echo.NewHTTPError(http.StatusUnauthorized, "invalid or expired jwt")
+	ErrJWTMissing = echo.NewHTTPError(http.StatusUnauthorized, "missing or malformed jwt")
 	ErrNoAuth     = echo.NewHTTPError(http.StatusUnauthorized, "no auth")
 )
 
 type (
 	BeforeFunc                 = middleware.BeforeFunc
-	JWTErrorHandler            = middleware.JWTErrorHandler
-	JWTErrorHandlerWithContext = middleware.JWTErrorHandlerWithContext
-	JWTSuccessHandler          = middleware.JWTSuccessHandler
+	JWTErrorHandler            func(err error) error
+	JWTErrorHandlerWithContext func(err error, c echo.Context) error
+	JWTSuccessHandler          func(c echo.Context)
 	Skipper                    = middleware.Skipper
 )
 
